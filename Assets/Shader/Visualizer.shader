@@ -53,7 +53,7 @@ Shader "Hidden/MediaPipe/FaceLandmark/Visualizer"
 
     float4 FragmentMark(float4 vertex : SV_Position) : SV_Target
     {
-        return float4(1, 0, 0, 0.9);
+        return float4(0, 1, 0, 0.9);
     }
 
     ENDCG

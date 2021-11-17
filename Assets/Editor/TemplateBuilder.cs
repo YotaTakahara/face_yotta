@@ -3,28 +3,30 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace MediaPipe {
-
-static class TemplateBuilder
+namespace MediaPipe
 {
+
+  static class TemplateBuilder
+  {
     const int VertexCount = FaceLandmark.FaceLandmarkDetector.VertexCount;
 
     [MenuItem("Assets/Create/MediaPipe/FaceLandmark/Create Template Meshes")]
     static void CreateTemplateMeshes()
     {
-        ProjectWindowUtil.CreateAsset(BuildMesh(), "TemplateMesh.asset");
-        ProjectWindowUtil.CreateAsset(BuildLineMesh(), "TemplateWire.asset");
-        ProjectWindowUtil.CreateAsset(BuildPointMesh(), "TemplatePoints.asset");
+      ProjectWindowUtil.CreateAsset(BuildMesh(), "TemplateMesh.asset");
+      ProjectWindowUtil.CreateAsset(BuildLineMesh(), "TemplateWire.asset");
+      ProjectWindowUtil.CreateAsset(BuildPointMesh(), "TemplatePoints.asset");
     }
 
     static Mesh BuildMesh()
     {
-        var mesh = new Mesh();
-        mesh.SetVertices(new Vector3[VertexCount]);
-        mesh.SetIndices(IndexList, MeshTopology.Triangles, 0);
-        mesh.SetUVs(0, uvList);
-        mesh.bounds = new Bounds(Vector3.zero, Vector3.one);
-        return mesh;
+      var mesh = new Mesh();
+      mesh.SetVertices(new Vector3[VertexCount]);
+      mesh.SetIndices(IndexList, MeshTopology.Triangles, 0);
+      mesh.SetUVs(0, uvList);
+      mesh.bounds = new Bounds(Vector3.zero, Vector3.one);
+      Debug.Log("mesh:" + mesh);
+      return mesh;
     }
 
     static void TryAddIndexPair(List<(int, int)> pairs, int i1, int i2)
@@ -32,32 +34,36 @@ static class TemplateBuilder
 
     static Mesh BuildLineMesh()
     {
-        var pairs = new List<(int, int)>();
+      var pairs = new List<(int, int)>();
 
-        for (var i = 0; i < IndexList.Length; i += 3)
-        {
-            TryAddIndexPair(pairs, IndexList[i + 0], IndexList[i + 1]);
-            TryAddIndexPair(pairs, IndexList[i + 1], IndexList[i + 2]);
-            TryAddIndexPair(pairs, IndexList[i + 2], IndexList[i + 0]);
-        }
+      for (var i = 0; i < IndexList.Length; i += 3)
+      {
+        Debug.Log("IndexList[i + 0]:" + IndexList[i + 0]);
+        Debug.Log("pairs:" + pairs);
+        TryAddIndexPair(pairs, IndexList[i + 0], IndexList[i + 1]);
+        TryAddIndexPair(pairs, IndexList[i + 1], IndexList[i + 2]);
+        TryAddIndexPair(pairs, IndexList[i + 2], IndexList[i + 0]);
+      }
 
-        var flatten =
-          pairs.Distinct().SelectMany(p => new[]{ p.Item1, p.Item2 });
+      var flatten =
+        pairs.Distinct().SelectMany(p => new[] { p.Item1, p.Item2 });
 
-        var mesh = new Mesh();
-        mesh.SetVertices(new Vector3[VertexCount]);
-        mesh.SetIndices(flatten.ToArray(), MeshTopology.Lines, 0);
-        mesh.bounds = new Bounds(Vector3.zero, Vector3.one);
-        return mesh;
+      var mesh = new Mesh();
+      mesh.SetVertices(new Vector3[VertexCount]);
+      mesh.SetIndices(flatten.ToArray(), MeshTopology.Lines, 0);
+      mesh.bounds = new Bounds(Vector3.zero, Vector3.one);
+      Debug.Log("mesh:" + mesh);
+      return mesh;
     }
 
     static Mesh BuildPointMesh()
     {
-        var mesh = new Mesh();
-        mesh.SetVertices(new Vector3[VertexCount]);
-        mesh.SetIndices(new int[VertexCount], MeshTopology.Points, 0);
-        mesh.bounds = new Bounds(Vector3.zero, Vector3.one);
-        return mesh;
+      var mesh = new Mesh();
+      mesh.SetVertices(new Vector3[VertexCount]);
+      mesh.SetIndices(new int[VertexCount], MeshTopology.Points, 0);
+      mesh.bounds = new Bounds(Vector3.zero, Vector3.one);
+      Debug.Log("mesh:" + mesh);
+      return mesh;
     }
 
     static int[] IndexList =
@@ -755,6 +761,6 @@ static class TemplateBuilder
         new Vector2(0.7102879882f, 0.6317470074f),
         new Vector2(0.7233300209f, 0.6366270185f)
     };
-}
+  }
 
 } // namespace MediaPipe
